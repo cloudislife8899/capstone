@@ -14,6 +14,7 @@
 		451179C2299F1AE800081248 /* PatientModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 451179C0299F1AE800081248 /* PatientModel.xcdatamodeld */; };
 		451179C4299F234200081248 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451179C3299F234200081248 /* DataController.swift */; };
 		455E1E54299F295100E6BA1F /* AddPatientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455E1E53299F295100E6BA1F /* AddPatientView.swift */; };
+		455E1E5629B9B71600E6BA1F /* EditPatientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455E1E5529B9B71600E6BA1F /* EditPatientView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		451179C1299F1AE800081248 /* PatientModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PatientModel.xcdatamodel; sourceTree = "<group>"; };
 		451179C3299F234200081248 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		455E1E53299F295100E6BA1F /* AddPatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPatientView.swift; sourceTree = "<group>"; };
+		455E1E5529B9B71600E6BA1F /* EditPatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPatientView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 			children = (
 				451179B3299F17A500081248 /* ContentView.swift */,
 				455E1E53299F295100E6BA1F /* AddPatientView.swift */,
+				455E1E5529B9B71600E6BA1F /* EditPatientView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 			files = (
 				451179C2299F1AE800081248 /* PatientModel.xcdatamodeld in Sources */,
 				455E1E54299F295100E6BA1F /* AddPatientView.swift in Sources */,
+				455E1E5629B9B71600E6BA1F /* EditPatientView.swift in Sources */,
 				451179C4299F234200081248 /* DataController.swift in Sources */,
 				451179B4299F17A500081248 /* ContentView.swift in Sources */,
 				451179B2299F17A500081248 /* final_year_capstoneApp.swift in Sources */,

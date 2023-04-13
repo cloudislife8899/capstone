@@ -13,36 +13,86 @@ struct ContentView: View {
     @FetchRequest(sortDescriptors: [SortDescriptor(\.date, order: .reverse)]) var patient: FetchedResults<Patient>
     
     @State private var showingAddView = false
+    @State private var isEditMode = false
+    
+    let image = Image("logo")
 
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                List {
-                    ForEach(patient) {
-                        patient in
-                        NavigationLink(destination: EditPatientView(patient: patient)) {
-                            HStack {
-                                Text("\(patient.first_name!) \(patient.last_name!)")
+            VStack(spacing: 0.0) {
+                HStack {
+                    Image("logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 40, height: 40)
+                    Text("NaSYM Surgical")
+                        .font(.title3)
+                        .foregroundColor(.primary)
+                        .padding(.vertical)
+                }
+                
+                if patient.isEmpty {
+                    Spacer()
+                    Text("Currently no patient data, please add a new patient profile.")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    Spacer()
+                    
+                } else {
+                    List {
+                        Section(header: Text("Past Patient Profiles")
+                            .padding(.top)) {
+                            ForEach(patient) { patient in
+                                NavigationLink(destination: EditPatientView(patient: patient)) {
+                                    HStack {
+                                        Text("\(patient.first_name!) \(patient.last_name!)")
+                                    }
+                                }
                             }
+                            .onDelete(perform: deletePatient)
                         }
+                        .headerProminence(.increased)
+                        
                     }
-                    .onDelete(perform: deletePatient)
-                }.listStyle(.plain)
-            }
-            .navigationTitle("NaSYMSurgical")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingAddView.toggle()
-                    } label: {
-                        Label("Add Patient", systemImage: "plus.circle")
+                    .listStyle(.automatic)
+
+                }
+                Button(action: {
+                    showingAddView.toggle()
+                }) {
+                    Text("Add New Patient Profile")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+                .padding(.all)
+                .disabled(isEditMode)
+                
+            
+                if !patient.isEmpty {
+                    Button(action: {
+                        isEditMode.toggle()
+                    }) {
+                        EditButton()
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical)
+                            .background(Color.gray)
+                            .cornerRadius(10)
+                            .padding(.horizontal)
                     }
                 }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
-                }
             }
-            .sheet(isPresented: $showingAddView) {
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
+            
+            .fullScreenCover(isPresented: $showingAddView) {
                 AddPatientView()
                 
             }
@@ -58,6 +108,8 @@ struct ContentView: View {
         }
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

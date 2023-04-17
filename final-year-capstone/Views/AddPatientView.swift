@@ -18,7 +18,7 @@ struct AddPatientView: View {
     @State private var first_name = ""
     @State private var last_name = ""
     @State private var notes = ""
-    @State private var file = ""
+    @State private var file = URL(filePath: "")
     
     @State private var showingConfirmationAlert = false
     
@@ -47,21 +47,31 @@ struct AddPatientView: View {
                     }
                     
                     Section(header: Text("File")) {
-                        HStack {
-                            Spacer()
-                            Button("Select STL file") {
-                                self.openFile = true
-                            }.fileImporter(isPresented: $openFile, allowedContentTypes: [UTType(filenameExtension: "stl")!]) { (res) in
-                                do {
-                                    let fileUrl = try res.get()
-                                    print(fileUrl)
-                                    
-                                } catch {
-                                    print("Error loading file")
-                                }
+
+                        if(file.relativePath.count > 1) {
+                            let scene = try! SCNScene(url: file, options: nil)
+                            HStack {
+                                SceneView(scene: scene, options: [.autoenablesDefaultLighting, .allowsCameraControl])
+                                    .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2)
+                                    .background(Color.black)
                             }
-                            
-                            Spacer()
+                        } else {
+                            HStack {
+                                Spacer()
+                                Button("Select STL file") {
+                                    self.openFile = true
+                                }.fileImporter(isPresented: $openFile, allowedContentTypes: [UTType(filenameExtension: "stl")!]) { (res) in
+                                    do {
+                                        file = try res.get()
+                                        print(file)
+                                        
+                                    } catch {
+                                        print("Error loading file")
+                                    }
+                                }
+                                
+                                Spacer()
+                            }
                         }
                     }
                     
@@ -104,11 +114,11 @@ struct AddPatientView: View {
                             title: Text("New Patient Created!"),
                             message: Text("A new patient has been created. You can now view their nasal symmetry."),
                             primaryButton: .default(Text("Home")) {
-                                DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, context: managedObjContext)
+                                DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, file_url: file, context: managedObjContext)
                                 dismiss()
                             },
                             secondaryButton: .default(Text("View")) {
-                                DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, context: managedObjContext)
+                                DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, file_url: file, context: managedObjContext)
                                 dismiss()
                             }
                         )

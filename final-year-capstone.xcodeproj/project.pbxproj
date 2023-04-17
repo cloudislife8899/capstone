@@ -25,6 +25,7 @@
 		451179B8299F17A600081248 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		451179C1299F1AE800081248 /* PatientModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PatientModel.xcdatamodel; sourceTree = "<group>"; };
 		451179C3299F234200081248 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		4515643229E7C9E000E61BFA /* head3d.stl */ = {isa = PBXFileReference; lastKnownFileType = file; name = head3d.stl; path = "../../../../../Downloads/Bellus head3D/head3d - Zach/head3d.stl"; sourceTree = "<group>"; };
 		455E1E53299F295100E6BA1F /* AddPatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPatientView.swift; sourceTree = "<group>"; };
 		455E1E5529B9B71600E6BA1F /* EditPatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPatientView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -72,6 +73,7 @@
 		451179B7299F17A600081248 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				4515643229E7C9E000E61BFA /* head3d.stl */,
 				451179B8299F17A600081248 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";

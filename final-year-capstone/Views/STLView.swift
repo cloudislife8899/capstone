@@ -93,7 +93,7 @@ struct STLView: View {
                 let line = SCNGeometry(sources: [vertexSource], elements: [element])
                 let lineNode = SCNNode(geometry: line)
                 scene.rootNode.addChildNode(lineNode)
-                
+        
                 let boxGeometry = SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0)
 
                 let mat = SCNMaterial()

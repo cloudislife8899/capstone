@@ -21,6 +21,10 @@ struct AddPatientView: View {
     @State private var file = URL(filePath: "")
     
     @State private var showingConfirmationAlert = false
+    @State private var showSTLView = false
+    @State private var isLoading = false
+    @State private var showLoadingIndicator = false
+
     
     var body: some View {
         NavigationView {
@@ -110,19 +114,37 @@ struct AddPatientView: View {
                     .padding([.top, .trailing])
                     .frame(maxWidth: .infinity / 2)
                     .alert(isPresented: $showingConfirmationAlert) {
-                        Alert(
-                            title: Text("New Patient Created!"),
-                            message: Text("A new patient has been created. You can now view their nasal symmetry."),
-                            primaryButton: .default(Text("Home")) {
-                                DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, file_url: file, context: managedObjContext)
-                                dismiss()
-                            },
-                            secondaryButton: .default(Text("View")) {
-                                DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, file_url: file, context: managedObjContext)
-                                dismiss()
-                            }
-                        )
+                        if showLoadingIndicator {
+                            return Alert(title: Text("Loading..."))
+                        } else {
+                            return Alert(
+                                title: Text("New Patient Created!"),
+                                message: Text("A new patient has been created. You can now view their nasal symmetry."),
+                                primaryButton: .default(Text("Home")) {
+                                    isLoading = true
+                                    DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, file_url: file, context: managedObjContext)
+                                    dismiss()
+                                },
+                                secondaryButton: .default(Text("View")) {
+                                    isLoading = true
+                                    showLoadingIndicator = true
+                                    DataController().addPatient(first_name: first_name, last_name: last_name, notes: notes, file_url: file, context: managedObjContext)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                        showSTLView = true
+                                        isLoading = false
+                                        showLoadingIndicator = false
+                                    }
+                                }
+                            )
+                        }
                     }
+
+                    NavigationLink(destination: STLView(file: file), isActive: $showSTLView) {
+                        EmptyView()
+                    }
+
+
+
                 }
                 .navigationBarTitle("", displayMode: .inline)
             }

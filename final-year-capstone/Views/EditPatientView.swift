@@ -1,4 +1,3 @@
-//
 //  EditPatientView.swift
 //  final-year-capstone
 //
@@ -21,41 +20,39 @@ struct EditPatientView: View {
     @State private var first_name = ""
     @State private var last_name = ""
     @State private var notes = ""
+    @State private var isEditing = false
     
     @State private var file = URL(filePath: "")
     
     var body: some View {
         VStack {
-            HStack(spacing: 10) {
-                Image("logo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 30, height: 30)
-                Text("NaSYM Surgical")
-                    .font(.title3)
-                    .foregroundColor(.primary)
-                    .padding(.vertical)
-            }
-            .padding(.horizontal)
-            
             Form {
                 Section(header: Text("First Name")) {
-                    TextField("First Name", text: $first_name)
-                        .onAppear {
-                            first_name = patient.first_name!
-                        }
+                    if isEditing {
+                        TextField("First Name", text: $first_name)
+                            .onAppear {
+                                first_name = patient.first_name!
+                            }
+                    } else {
+                        Text(patient.first_name ?? "")
+                    }
                 }
                 
                 Section(header: Text("Last Name")) {
-                    TextField("Last Name", text: $last_name)
-                        .onAppear {
-                            last_name = patient.last_name!
-                        }
+                    if isEditing {
+                        TextField("Last Name", text: $last_name)
+                            .onAppear {
+                                last_name = patient.last_name!
+                            }
+                    } else {
+                        Text(patient.last_name ?? "")
+                    }
                 }
                 
                 Section(header: Text("File")) {
-                    let stored_file = patient.file_url! as URL
-
+                    let stored_file = patient.file_url ?? URL(filePath: "")
+                    
+                    
                     if(stored_file.relativePath.count > 1) {
                         let scene = try! SCNScene(url: stored_file, options: nil)
                         HStack {
@@ -84,34 +81,67 @@ struct EditPatientView: View {
                 }
                 
                 Section(header: Text("Notes")) {
-                    TextEditor(text: $notes)
-                        .frame(height: 100)
-                        .onAppear {
-                            notes = patient.notes ?? ""
-                        }
+                    if isEditing {
+                        TextEditor(text: $notes)
+                            .frame(height: 100)
+                            .onAppear {
+                                notes = patient.notes ?? ""
+                            }
+                    } else {
+                        Text(patient.notes ?? "")
+                    }
                 }
                 
             }
             
-            HStack(spacing: 10) {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Text("Cancel")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .padding()
-                        .background(Color.gray)
-                        .cornerRadius(10)
+            if isEditing {
+                HStack(spacing: 10) {
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Text("Cancel")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.gray)
+                            .cornerRadius(10)
+                    }
+                    .padding([.top, .leading])
+                    .frame(maxWidth: .infinity / 2)
+                    
+                    Button(action: {
+                        showingConfirmationAlert = true
+                    }) {
+                        Text("Save")
+
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                    }
+                    .padding([.top, .trailing])
+                    .frame(maxWidth: .infinity / 2)
                 }
-                .padding([.top, .leading])
-                .frame(maxWidth: .infinity / 2)
-                
+                .alert(isPresented: $showingConfirmationAlert) {
+                    Alert(
+                        title: Text("Save Changes?"),
+                        message: Text("Are you sure you want to save these changes?"),
+                        primaryButton: .default(Text("Save")) {
+                            DataController().editPatient(patient: patient, first_name: first_name, last_name: last_name, notes: notes, context: managedObjContext)
+                            dismiss()
+                        },
+                        secondaryButton: .cancel(Text("Cancel"))
+                    )
+                }
+                .navigationBarBackButtonHidden(true)
+            } else {
                 Button(action: {
-                    showingConfirmationAlert = true
+                    isEditing = true
                 }) {
-                    Text("Save")
+                    Text("Edit")
                         .font(.headline)
                         .foregroundColor(.white)
                         .frame(minWidth: 0, maxWidth: .infinity)
@@ -119,21 +149,22 @@ struct EditPatientView: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
-                .padding([.top, .trailing])
-                .frame(maxWidth: .infinity / 2)
+                .padding([.top, .leading, .trailing])
             }
-            .alert(isPresented: $showingConfirmationAlert) {
-                Alert(
-                    title: Text("Save Changes?"),
-                    message: Text("Are you sure you want to save these changes?"),
-                    primaryButton: .default(Text("Save")) {
-                        DataController().editPatient(patient: patient, first_name: first_name, last_name: last_name, notes: notes, context: managedObjContext)
-                        dismiss()
-                    },
-                    secondaryButton: .cancel(Text("Cancel"))
-                )
+        }
+        .navigationTitle("Edit Patient")
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                HStack {
+                    Image("logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 30, height: 30)
+                    Text("NaSYM Surgical")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                }
             }
-            .navigationBarBackButtonHidden(true)
         }
     }
 }
